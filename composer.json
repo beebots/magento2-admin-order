@@ -1,5 +1,5 @@
 {
-    "name": "bbots/magento2-admin-order",
+    "name": "beebots/magento2-admin-order",
     "description": "",
     "require": {
         "php": ">=7.1.0",
@@ -15,6 +15,11 @@
     "license": [
 
     ],
+    "support": {
+        "docs": "https://github.com/beebots/magento2-admin-order",
+        "issues": "https://github.com/beebots/magento2-admin-order/issues",
+        "source": "https://github.com/beebots/magento2-admin-order"
+    },
     "autoload": {
         "files": [
             "registration.php"
