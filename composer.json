@@ -3,12 +3,7 @@
     "description": "",
     "require": {
         "php": ">=7.1.0",
-        "magento/module-sales": "^102.0.0",
-
-        "magento/magento-composer-installer": "*"
-    },
-    "suggest": {
-
+        "magento/module-sales": "^102.0.0"
     },
     "type": "magento2-module",
     "version": "0.1.0",
@@ -25,15 +20,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "BBots\\AdminOrder\\": ""
+            "BeeBots\\AdminOrder\\": ""
         }
-    },
-    "extra": {
-        "map": [
-            [
-                "*",
-                "BBots/AdminOrder"
-            ]
-        ]
     }
 }
