@@ -10,5 +10,8 @@
         <referenceBlock name="content">
             <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/adminOrderJs.phtml" name="admin_order_js"/>
         </referenceBlock>
+        <referenceBlock name="items_grid">
+            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch" template="BeeBots_AdminOrder::order/create/item_search.phtml" name="bb_item_search" before="-"/>
+        </referenceBlock>
     </body>
 </page>
