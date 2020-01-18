@@ -1,6 +1,11 @@
 <?php
  /** @var $block BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch */
-$allSimpleProducts = $block->getSimpleProductJsonData();
 ?>
-<h1>Here we go</h1>
-
+<div class="js-order-item-add"></div>
+<script>
+    require([
+        'order-items-add'
+    ], function(orderItemsAdd){
+        orderItemsAdd.init(<?= $block->getSimpleProductJson()?>);
+    });
+</script>

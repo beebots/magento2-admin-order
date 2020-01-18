@@ -6,12 +6,13 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="BeeBots_AdminOrder::css/lib/selectize.default.css"/>
+    </head>
     <body>
         <referenceBlock name="content">
-            <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/adminOrderJs.phtml" name="admin_order_js"/>
-        </referenceBlock>
-        <referenceBlock name="items_grid">
             <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch" template="BeeBots_AdminOrder::order/create/item_search.phtml" name="bb_item_search" before="-"/>
+            <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/adminOrderJs.phtml" name="admin_order_js"/>
         </referenceBlock>
     </body>
 </page>
