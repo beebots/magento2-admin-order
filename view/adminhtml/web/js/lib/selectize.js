@@ -2236,7 +2236,8 @@
 	
 			if (self.settings.mode === 'single' && self.items.length) {
 				self.hideInput();
-				self.$control_input.blur(); // close keyboard on iOS
+				// BeeBots: Fixng a tabbing issue by removing the following line
+				//self.$control_input.blur(); // close keyboard on iOS
 			}
 	
 			self.isOpen = false;

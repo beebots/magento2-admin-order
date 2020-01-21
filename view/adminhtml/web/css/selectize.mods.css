@@ -1,0 +1,7 @@
+.selectize-control.single .selectize-input.focus {
+  box-shadow: none;
+  border: solid 1px #007bdb;
+}
+.selectize-control.single .focus + .selectize-dropdown{
+  border-color: #007bdb;
+}

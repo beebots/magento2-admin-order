@@ -8,6 +8,7 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="BeeBots_AdminOrder::css/lib/selectize.default.css"/>
+        <css src="BeeBots_AdminOrder::css/selectize.mods.css"/>
     </head>
     <body>
         <referenceBlock name="content">
