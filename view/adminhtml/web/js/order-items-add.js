@@ -1,18 +1,20 @@
 define([
     'jquery',
-    'selectize'
+    'selectize',
+    'Magento_Catalog/catalog/product/composite/configure',
 ], function ($) {
     'use strict';
 
     let config = {
-        orderItemAddSelector: '.js-order-item-add',
+        insertAfterSelector: '#order-items_grid table > tbody:last-child',
         itemSelectorClass: 'js-order-item-selector',
-        itemTableClass: 'js-order-item-add-table',
+        itemAreaClass: 'js-order-item-add-area',
         itemSelectorPlaceholder: 'Add by SKU or Name',
         rowClass: 'js-order-item-row',
         quantityClass: 'js-order-item-quantity',
         priceClass: 'js-order-item-price',
-        rowActionsClass: 'js-order-item-row-actions'
+        rowActionsClass: 'js-order-item-row-actions',
+        itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]'
     };
 
     let orderItemsAdd = {
@@ -21,17 +23,25 @@ define([
         init: function(productData){
             this.productData = productData;
 
-            let $orderItemsAddElement = $(config.orderItemAddSelector);
-            let $itemAddTable = this.createItemAddTable();
-            $orderItemsAddElement.append($itemAddTable);
+            let $itemAddTable = this.createItemAddArea();
+            $itemAddTable.insertAfter(config.insertAfterSelector);
 
-            let $saveButton = this.createSaveButton();
-            $orderItemsAddElement.append($saveButton);
+            // let $saveButton = this.createSaveButton();
+            // let $saveCell = $('<td colspan="7"></td>');
+            // let $saveRow = $('<tr></tr>');
+            // $saveCell.append($saveButton);
+            // $saveRow.append($saveCell)
+            // $itemAddTable.append($saveRow);
 
+            // Hijack the order save button click
+            $(config.itemsSaveButtonSelector).click(function(event){
+                event.preventDefault();
+                console.log('hello');
+            });
             return this;
         },
-        createItemAddTable: function(){
-            let $table = $('<table class="data-table admin__table-primary order-tables order-item-add-table ' + config.itemTableClass + '"></table>');
+        createItemAddArea: function(){
+            let $table = $('<tbody class="' + config.itemAreaClass + '"></tbody>');
 
             let $row = this.createItemAddRow();
             $table.append($row);
@@ -45,14 +55,20 @@ define([
         },
         createItemAddRow: function(){
             let $row = $('<tr class="' + config.rowClass + '"></tr>');
+
             let $itemSelectorWrap = this.createItemSelectorWrap();
             $row.append($itemSelectorWrap);
+
+            let $priceWrap = this.createItemPriceWrap();
+            $row.append($priceWrap);
 
             let $itemQuantityWrap = this.createItemQuantity();
             $row.append($itemQuantityWrap);
 
-            let $priceWrap = this.createItemPriceWrap();
-            $row.append($priceWrap);
+            $row.append('<td></td>');// Subtotal
+            $row.append('<td></td>');// Discount
+            $row.append('<td></td>');// Row Subtotal
+
 
             let $rowActions = this.createRowActions();
             $row.append($rowActions);
@@ -94,8 +110,8 @@ define([
                 '</div>';
         },
         createItemQuantity: function(){
-            let $itemQuantityWrap = $('<td class="order-item-quantity-wrap"></td>');
-            let $itemQuantityElement = $('<input type="number" min="1" value="1" class="admin__control-text ' + config.quantityClass +'" />');
+            let $itemQuantityWrap = $('<td class="order-item-quantity-wrap col-qty"></td>');
+            let $itemQuantityElement = $('<input type="number" min="1" value="1" maxlength="12" class="admin__control-text ' + config.quantityClass +'" />');
             $itemQuantityElement.change(this.onQuantityChange);
             $itemQuantityWrap.append($itemQuantityElement);
             return $itemQuantityWrap;
@@ -107,7 +123,7 @@ define([
             return $priceWrap;
         },
         createRowActions: function(){
-            return $('<td class="order-item-row-actions ' + config.rowActionsClass + '"></td>');
+            return $('<td class="order-item-row-actions ' + config.rowActionsClass + '" colspan="4"></td>');
         },
         onQuantityChange: function(){
             return this;
@@ -116,7 +132,7 @@ define([
             let $selectorElement = $(event.target);
             let $parentRow = $selectorElement.closest('.' + config.rowClass);
             this.setRowPrice($parentRow, $selectorElement.val());
-            this.createDeleteLinkForRow($parentRow);
+            this.createDeleteButtonForRow($parentRow);
             this.maintainLastRow();
         },
         setRowPrice: function($row, productId){
@@ -145,19 +161,19 @@ define([
         },
         // Ensure that there is an empty last row
         maintainLastRow: function(){
-            let $lastItemSelector = $(config.orderItemAddSelector + ' select.' + config.itemSelectorClass).last();
+            let $lastItemSelector = $('.' + config.itemAreaClass + ' select.' + config.itemSelectorClass).last();
             if(!$lastItemSelector.val()){
                 return this;
             }
 
             let $newRow = this.createItemAddRow();
-            $('.' + config.itemTableClass).append($newRow);
+            $('.' + config.itemAreaClass).append($newRow);
 
             return this;
         },
-        createDeleteLinkForRow: function($row){
+        createDeleteButtonForRow: function($row){
             let $rowActions = $row.find('.' + config.rowActionsClass);
-            let $deleteButton = $('<button tabindex="-1" class="order-item-row-delete action-secondary action-delete">X</button>');
+            let $deleteButton = $('<button tabindex="-1" class="order-item-row-delete action-additional">Remove</button>');
             $deleteButton.click(this.onDeleteRow);
             $rowActions.html($deleteButton);
 
