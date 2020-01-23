@@ -14,7 +14,8 @@ define([
         quantityClass: 'js-order-item-quantity',
         priceClass: 'js-order-item-price',
         rowActionsClass: 'js-order-item-row-actions',
-        itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]'
+        itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
+        orderItemsGridSelector: '#order-items_grid'
     };
 
     let orderItemsAdd = {
@@ -29,7 +30,7 @@ define([
             // Replace the order grid item save button
             let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
             let $newSaveButton = this.createSaveButton();
-            $originalOrderSaveButton.after($newSaveButton);
+            $(config.orderItemsGridSelector).after($newSaveButton);
             $originalOrderSaveButton.hide();
 
             return this;
