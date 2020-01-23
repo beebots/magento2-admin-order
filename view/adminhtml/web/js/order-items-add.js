@@ -37,32 +37,6 @@ define([
             return this;
         },
 
-        replaceDefaultOrderSaveButton: function(){
-            let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
-            let $newSaveButton = this.createSaveButton();
-            $(config.orderItemsGridSelector).after($newSaveButton);
-            $originalOrderSaveButton.hide();
-        },
-
-        hideDefaultProductSearchButton: function(){
-            $(config.defaultSearchButtonSelector).hide();
-        },
-
-        setupReinitAfterItemLoad: function(){
-            // Reinit on item load
-            if(this.hasHookedIntoOrderItemLoadEvent){
-                return;
-            }
-
-            let originalItemsLoaded = window.order.itemsLoaded;
-            window.order.itemsLoaded = function(){
-                originalItemsLoaded();
-                this.init(this.productData);
-            }.bind(this);
-
-            this.hasHookedIntoOrderItemLoadEvent = true;
-        },
-
         createItemAddArea: function(){
             let $table = $('<tbody class="order-item-add-area ' + config.itemAreaClass + '"></tbody>');
 
@@ -141,7 +115,6 @@ define([
         createItemQuantity: function(){
             let $itemQuantityWrap = $('<td class="order-item-quantity-wrap col-qty"></td>');
             let $itemQuantityElement = $('<input type="number" min="1" value="1" maxlength="12" class="admin__control-text ' + config.quantityClass +'" />');
-            $itemQuantityElement.change(this.onQuantityChange);
             $itemQuantityWrap.append($itemQuantityElement);
             return $itemQuantityWrap;
         },
@@ -157,8 +130,29 @@ define([
             return $('<td class="order-item-row-actions ' + config.rowActionsClass + '" colspan="4"></td>');
         },
 
-        onQuantityChange: function(){
-            return this;
+        replaceDefaultOrderSaveButton: function(){
+            let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
+            let $newSaveButton = this.createSaveButton();
+            $(config.orderItemsGridSelector).after($newSaveButton);
+            $originalOrderSaveButton.hide();
+        },
+
+        hideDefaultProductSearchButton: function(){
+            $(config.defaultSearchButtonSelector).hide();
+        },
+
+        setupReinitAfterItemLoad: function(){
+            if(this.hasHookedIntoOrderItemLoadEvent){
+                return;
+            }
+
+            let originalItemsLoaded = window.order.itemsLoaded;
+            window.order.itemsLoaded = function(){
+                originalItemsLoaded();
+                this.init(this.productData);
+            }.bind(this);
+
+            this.hasHookedIntoOrderItemLoadEvent = true;
         },
 
         onItemSelectorChange: function(event){
@@ -239,7 +233,6 @@ define([
             // Save the new items to the order
             this.saveNewItemsToOrder(productsToAdd);
 
-            // TODO: Remove all but the last empty item row
             return this;
         },
 
@@ -259,16 +252,20 @@ define([
                     dataType: 'json',
                     data: data,
                 })
-                .fail(function(xhr, status, error){
-                    console.log('Error updating new order items: ' + error);
-                })
-                .complete(function(){
-                    this.stopLoader();
-                    this.updateExistingQuoteItems();
-                }.bind(this));
+                .fail(this.onSaveNewItemsFail.bind(this))
+                .complete(this.onSaveNewItemsComplete.bind(this));
 
             this.startLoader();
             return this;
+        },
+
+        onSaveNewItemsFail: function(xhr, status, error){
+            console.log('Error updating new order items: ' + error);
+        },
+
+        onSaveNewItemsComplete: function(){
+            this.stopLoader();
+            this.updateExistingQuoteItems();
         },
 
         updateExistingQuoteItems: function(){
@@ -285,7 +282,7 @@ define([
         },
 
         getProductsToAdd: function() {
-            // [{"id": "123", "quantity": "2"}, {...}]
+            // Format: [{"id": "123", "quantity": "2"}, {...}]
             let productsToAdd = [];
             let $rows = $('.' + config.rowClass);
             $rows.each(function(index, row){
