@@ -2,6 +2,7 @@ define([
     'jquery',
     'selectize',
     'Magento_Catalog/catalog/product/composite/configure',
+    'Magento_Sales/order/create/scripts',
 ], function ($) {
     'use strict';
 
@@ -15,36 +16,55 @@ define([
         priceClass: 'js-order-item-price',
         rowActionsClass: 'js-order-item-row-actions',
         itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
-        orderItemsGridSelector: '#order-items_grid'
+        orderItemsGridSelector: '#order-items_grid',
+        defaultSearchButtonSelector: 'button#add_products'
     };
 
     let orderItemsAdd = {
         itemsToAddToOrder: [],
         productData: [],
+        hasHookedIntoOrderItemLoadEvent: false,
+
         init: function(productData){
             this.productData = productData || this.productData;
 
             let $itemAddTable = this.createItemAddArea();
             $itemAddTable.insertAfter(config.insertAfterSelector);
 
-            // Replace the order grid item save button
-            let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
-            let $newSaveButton = this.createSaveButton();
-            $(config.orderItemsGridSelector).after($newSaveButton);
-            $originalOrderSaveButton.hide();
+            this.replaceDefaultOrderSaveButton();
+            this.hideDefaultProductSearchButton();
 
             return this;
         },
 
+        replaceDefaultOrderSaveButton: function(){
+            let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
+            let $newSaveButton = this.createSaveButton();
+            $(config.orderItemsGridSelector).after($newSaveButton);
+            $originalOrderSaveButton.hide();
+        },
+
+        hideDefaultProductSearchButton: function(){
+            $(config.defaultSearchButtonSelector).hide();
+        },
+
         setupReinitAfterItemLoad: function(){
             // Reinit on item load
+            if(this.hasHookedIntoOrderItemLoadEvent){
+                return;
+            }
+
+            let originalItemsLoaded = window.order.itemsLoaded;
             window.order.itemsLoaded = function(){
+                originalItemsLoaded();
                 this.init(this.productData);
             }.bind(this);
+
+            this.hasHookedIntoOrderItemLoadEvent = true;
         },
 
         createItemAddArea: function(){
-            let $table = $('<tbody class="' + config.itemAreaClass + '"></tbody>');
+            let $table = $('<tbody class="order-item-add-area ' + config.itemAreaClass + '"></tbody>');
 
             let $row = this.createItemAddRow();
             $table.append($row);
@@ -53,7 +73,7 @@ define([
         },
 
         createSaveButton: function(){
-            let $saveButton = $('<button class="action-secondary action-add" type="button">Update Items and Quantities</button>');
+            let $saveButton = $('<button class="action-secondary action-add save-order-items" type="button">Update Items and Quantities</button>');
             $saveButton.click(this.onSaveItemsToOrder.bind(this));
             return $saveButton;
         },
@@ -80,6 +100,7 @@ define([
 
             return $row;
         },
+
         createItemSelectorWrap: function(){
             let $searchElement = $('<select class="' + config.itemSelectorClass + ' order-item-selector"></select>');
             let $searchElementWrap = $('<td class="order-item-select-wrap"></td>');
@@ -87,6 +108,7 @@ define([
             this.initializeItemSelectorElement($searchElement);
             return $searchElementWrap;
         },
+
         initializeItemSelectorElement: function ($searchElement) {
             $searchElement.selectize({
                 searchField: ['sku', 'name'],
@@ -108,12 +130,14 @@ define([
             }.bind(this));
             return this;
         },
+
         buildProductSearchItem: function(item, escape){
             return '<div>' +
                 (item.sku ? '<span class="sku">' + escape(item.sku) + ':</span> ' : '') +
                 (item.name ? '<span class="name">' + escape(item.name) + '</span>' : '') +
                 '</div>';
         },
+
         createItemQuantity: function(){
             let $itemQuantityWrap = $('<td class="order-item-quantity-wrap col-qty"></td>');
             let $itemQuantityElement = $('<input type="number" min="1" value="1" maxlength="12" class="admin__control-text ' + config.quantityClass +'" />');
@@ -121,18 +145,22 @@ define([
             $itemQuantityWrap.append($itemQuantityElement);
             return $itemQuantityWrap;
         },
+
         createItemPriceWrap: function(){
             let $priceWrap = $('<td class="order-item-price-wrap"></td>');
             let $price = $('<span class="' + config.priceClass + '"></span>');
             $priceWrap.append($price);
             return $priceWrap;
         },
+
         createRowActions: function(){
             return $('<td class="order-item-row-actions ' + config.rowActionsClass + '" colspan="4"></td>');
         },
+
         onQuantityChange: function(){
             return this;
         },
+
         onItemSelectorChange: function(event){
             let $selectorElement = $(event.target);
             let $parentRow = $selectorElement.closest('.' + config.rowClass);
@@ -140,6 +168,7 @@ define([
             this.createDeleteButtonForRow($parentRow);
             this.maintainLastRow();
         },
+
         setRowPrice: function($row, productId){
             let $priceElement = $row.find('.' + config.priceClass);
             if(!productId){
@@ -150,12 +179,14 @@ define([
             let formattedPrice = this.formatPriceForDisplay(price);
             $priceElement.text(formattedPrice);
         },
+
         getPriceById: function(productId){
             let product =  this.productData.find(function(item){
                 return item.id === productId;
             });
             return product['price'];
         },
+
         formatPriceForDisplay: function(price){
             let formatter = new Intl.NumberFormat('en-US', {
                 style: 'currency',
@@ -164,6 +195,7 @@ define([
 
             return formatter.format(price);
         },
+
         // Ensure that there is an empty last row
         maintainLastRow: function(){
             let $lastItemSelector = $('.' + config.itemAreaClass + ' select.' + config.itemSelectorClass).last();
@@ -176,6 +208,7 @@ define([
 
             return this;
         },
+
         createDeleteButtonForRow: function($row){
             let $rowActions = $row.find('.' + config.rowActionsClass);
             let $deleteButton = $('<button tabindex="-1" class="order-item-row-delete action-additional" type="button">Remove</button>');
@@ -184,6 +217,7 @@ define([
 
             return this;
         },
+
         onDeleteRow: function(event) {
             let $deleteButton = $(event.target);
             let $row = $deleteButton.closest('.' + config.rowClass);
@@ -191,6 +225,7 @@ define([
 
             return this;
         },
+
         onSaveItemsToOrder: function(event) {
             let productsToAdd = this.getProductsToAdd();
 
@@ -207,6 +242,7 @@ define([
             // TODO: Remove all but the last empty item row
             return this;
         },
+
         saveNewItemsToOrder: function(productsToAdd){
             let area = ['search', 'items', 'shipping_method', 'totals', 'giftmessage','billing_method'];
             area = window.order.prepareArea(area);
