@@ -10,6 +10,7 @@
         <css src="BeeBots_AdminOrder::css/lib/selectize.default.css"/>
     </head>
     <body>
+<!--        <referenceBlock name="search" remove="true" />-->
         <referenceBlock name="content">
             <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/adminOrderJs.phtml" name="admin_order_js"/>
         </referenceBlock>

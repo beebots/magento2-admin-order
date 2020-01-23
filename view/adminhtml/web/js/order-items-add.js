@@ -26,18 +26,12 @@ define([
             let $itemAddTable = this.createItemAddArea();
             $itemAddTable.insertAfter(config.insertAfterSelector);
 
-            // let $saveButton = this.createSaveButton();
-            // let $saveCell = $('<td colspan="7"></td>');
-            // let $saveRow = $('<tr></tr>');
-            // $saveCell.append($saveButton);
-            // $saveRow.append($saveCell)
-            // $itemAddTable.append($saveRow);
+            // Replace the order grid item save button
+            let $originalOrderSaveButton = $(config.itemsSaveButtonSelector);
+            let $newSaveButton = this.createSaveButton();
+            $originalOrderSaveButton.after($newSaveButton);
+            $originalOrderSaveButton.hide();
 
-            // Hijack the order save button click
-            $(config.itemsSaveButtonSelector).click(function(event){
-                event.preventDefault();
-                console.log('hello');
-            });
             return this;
         },
         createItemAddArea: function(){
@@ -49,7 +43,7 @@ define([
             return $table;
         },
         createSaveButton: function(){
-            let $saveButton = $('<button class="action-secondary action-add">Save Items to Order</button>');
+            let $saveButton = $('<button class="action-secondary action-add" type="button">Save Items to Order</button>');
             $saveButton.click(this.onSaveItemsToOrder.bind(this));
             return $saveButton;
         },
@@ -173,7 +167,7 @@ define([
         },
         createDeleteButtonForRow: function($row){
             let $rowActions = $row.find('.' + config.rowActionsClass);
-            let $deleteButton = $('<button tabindex="-1" class="order-item-row-delete action-additional">Remove</button>');
+            let $deleteButton = $('<button tabindex="-1" class="order-item-row-delete action-additional" type="button">Remove</button>');
             $deleteButton.click(this.onDeleteRow);
             $rowActions.html($deleteButton);
 
@@ -187,12 +181,49 @@ define([
             return this;
         },
         onSaveItemsToOrder: function(event) {
-            // Save the items to the order
-            let area = ['search', 'items', 'shipping_method', 'totals', 'giftmessage','billing_method'];
             let productsToAdd = this.getProductsToAdd();
-            let productsFormattedForSubmit = this.formatProductsForSubmit(productsToAdd);
-            window.order.productConfigureSubmit('product_to_add', area, productsFormattedForSubmit, []);
-            // Remove all but the last empty item row
+
+            // If we don't have new products, update the existing quote items and return early
+            if(productsToAdd.length === 0){
+                return this.updateExistingQuoteItems();
+            }
+
+            // Save the new items to the order
+            this.saveNewItemsToOrder(productsToAdd);
+
+            // TODO: Remove all but the last empty item row
+            return this;
+        },
+        saveNewItemsToOrder: function(productsToAdd){
+            let area = ['search', 'items', 'shipping_method', 'totals', 'giftmessage','billing_method'];
+            area = window.order.prepareArea(area);
+
+            let url = window.order.loadBaseUrl + 'block/' + area;
+
+            let data = this.formatProductsForSubmit(productsToAdd);
+            data = window.order.prepareParams(data);
+            data.json = true;
+
+            $.ajax({
+                    url: url,
+                    method: 'POST',
+                    dataType: 'json',
+                    data: data,
+                })
+                .fail(function(xhr, status, error){
+                    console.log('Error updating new order items: ' + error);
+                })
+                .complete(function(){
+                    this.stopLoader();
+                    this.updateExistingQuoteItems();
+                }.bind(this));
+
+            this.startLoader();
+            return this;
+        },
+
+        updateExistingQuoteItems: function(){
+            window.order.itemsUpdate();
             return this;
         },
 
@@ -201,7 +232,7 @@ define([
                 let key = 'item[' + product['id'] + '][qty]';
                 formattedProducts[key] = product['quantity'];
                 return formattedProducts;
-            }, []);
+            }, {});
         },
 
         getProductsToAdd: function() {
@@ -226,8 +257,17 @@ define([
             });
 
             return productsToAdd;
-        }
+        },
 
+        startLoader: function(){
+            $(window.productConfigure.blockForm).trigger('processStart');
+            return this;
+        },
+
+        stopLoader: function(){
+            $(window.productConfigure.blockForm).trigger('processStop');
+            return this;
+        }
     };
 
     return orderItemsAdd;
