@@ -21,7 +21,7 @@ define([
         itemsToAddToOrder: [],
         productData: [],
         init: function(productData){
-            this.productData = productData;
+            this.productData = productData || this.productData;
 
             let $itemAddTable = this.createItemAddArea();
             $itemAddTable.insertAfter(config.insertAfterSelector);
@@ -34,6 +34,14 @@ define([
 
             return this;
         },
+
+        setupReinitAfterItemLoad: function(){
+            // Reinit on item load
+            window.order.itemsLoaded = function(){
+                this.init(this.productData);
+            }.bind(this);
+        },
+
         createItemAddArea: function(){
             let $table = $('<tbody class="' + config.itemAreaClass + '"></tbody>');
 
@@ -42,11 +50,13 @@ define([
 
             return $table;
         },
+
         createSaveButton: function(){
-            let $saveButton = $('<button class="action-secondary action-add" type="button">Save Items to Order</button>');
+            let $saveButton = $('<button class="action-secondary action-add" type="button">Update Items and Quantities</button>');
             $saveButton.click(this.onSaveItemsToOrder.bind(this));
             return $saveButton;
         },
+
         createItemAddRow: function(){
             let $row = $('<tr class="' + config.rowClass + '"></tr>');
 
@@ -182,6 +192,8 @@ define([
         },
         onSaveItemsToOrder: function(event) {
             let productsToAdd = this.getProductsToAdd();
+
+            this.setupReinitAfterItemLoad();
 
             // If we don't have new products, update the existing quote items and return early
             if(productsToAdd.length === 0){
