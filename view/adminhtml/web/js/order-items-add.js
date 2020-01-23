@@ -34,6 +34,8 @@ define([
             this.replaceDefaultOrderSaveButton();
             this.hideDefaultProductSearchButton();
 
+            this.setupReinitAfterItemLoad();
+
             return this;
         },
 
@@ -222,8 +224,6 @@ define([
 
         onSaveItemsToOrder: function(event) {
             let productsToAdd = this.getProductsToAdd();
-
-            this.setupReinitAfterItemLoad();
 
             // If we don't have new products, update the existing quote items and return early
             if(productsToAdd.length === 0){
