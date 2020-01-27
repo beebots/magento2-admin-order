@@ -44,7 +44,6 @@ class ItemSearch extends Template
     {
         $productCollection = $this->collectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addAttributeToSelect('flavor')
             ->addFilter('type_id', 'simple')
             ->addAttributeToFilter('status', Status::STATUS_ENABLED);
 
@@ -58,21 +57,10 @@ class ItemSearch extends Template
                 'price' => $product->getPrice(),
             ];
 
-            if ($product->hasData('flavor')) {
-                array_push($item, ['flavor' => $product->getData('flavor')]);
-            }
-
             $items[] = $item;
         }
 
         return json_encode($items);
     }
 
-    public function getAttributeOptionText($attributeCode, $attributeValue)
-    {
-        return $this->eavConfig
-            ->getAttribute(ProductAttributeInterface::ENTITY_TYPE_CODE, $attributeCode)
-            ->getSource()
-            ->getOptionText($attributeValue);
-    }
 }
