@@ -12,7 +12,7 @@
     <body>
 <!--        <referenceBlock name="search" remove="true" />-->
         <referenceBlock name="content">
-            <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/adminOrderJs.phtml" name="admin_order_js"/>
+            <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/admin_order_js.phtml" name="admin_order_js"/>
         </referenceBlock>
         <referenceBlock name="js">
             <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch" template="BeeBots_AdminOrder::order/create/item_search.phtml" name="bb_item_search" as="search" before="-"/>
