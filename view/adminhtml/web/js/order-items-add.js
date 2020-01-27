@@ -23,9 +23,11 @@ define([
     let orderItemsAdd = {
         itemsToAddToOrder: [],
         productData: [],
-        hasHookedIntoOrderItemLoadEvent: false,
+        hasHookedIntoOrderItemsLoadEvent: false,
+        hasHookedIntoOrderAreasLoadEvent: false,
 
         init: function(productData){
+            console.log('Initializing Item Adder');
             this.productData = productData || this.productData;
 
             let $itemAddTable = this.createItemAddArea();
@@ -34,7 +36,8 @@ define([
             this.replaceDefaultOrderSaveButton();
             this.hideDefaultProductSearchButton();
 
-            this.setupReinitAfterItemLoad();
+            this.setupReinitAfterItemsLoad();
+            this.setupReinitAfterAreasLoad();
 
             return this;
         },
@@ -143,18 +146,34 @@ define([
             $(config.defaultSearchButtonSelector).hide();
         },
 
-        setupReinitAfterItemLoad: function(){
-            if(this.hasHookedIntoOrderItemLoadEvent){
+        setupReinitAfterItemsLoad: function(){
+            if(this.hasHookedIntoOrderItemsLoadEvent){
                 return;
             }
 
             let originalItemsLoaded = window.order.itemsLoaded;
             window.order.itemsLoaded = function(){
+                console.log('itemsHook');
                 originalItemsLoaded();
                 this.init(this.productData);
             }.bind(this);
 
-            this.hasHookedIntoOrderItemLoadEvent = true;
+            this.hasHookedIntoOrderItemsLoadEvent = true;
+        },
+
+        setupReinitAfterAreasLoad: function(){
+            if(this.hasHookedIntoOrderAreasLoadEvent){
+                return;
+            }
+
+            let originalAreasLoaded = window.order.areasLoaded;
+            window.order.areasLoaded = function(){
+                console.log('areasHook');
+                originalAreasLoaded();
+                this.init(this.productData);
+            }.bind(this);
+
+            this.hasHookedIntoOrderAreasLoadEvent = true;
         },
 
         onItemSelectorChange: function(event){
