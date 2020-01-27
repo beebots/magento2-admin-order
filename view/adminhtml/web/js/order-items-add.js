@@ -27,7 +27,6 @@ define([
         hasHookedIntoOrderAreasLoadEvent: false,
 
         init: function(productData){
-            console.log('Initializing Item Adder');
             this.productData = productData || this.productData;
 
             let $itemAddTable = this.createItemAddArea();
