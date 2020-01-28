@@ -15,7 +15,8 @@
             <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/admin_order_js.phtml" name="admin_order_js"/>
         </referenceBlock>
         <referenceBlock name="js">
-            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemAdder" template="BeeBots_AdminOrder::order/create/order_items_adder.phtml" name="bb_item_adder" before="-"/>
+            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemAdder" template="BeeBots_AdminOrder::order/create/order_items_adder.phtml" name="bb_item_adder" />
+            <block class="Magento\Backend\Block\Template" template="BeeBots_AdminOrder::order/create/order_item_actions.phtml" name="bb_item_actions" />
         </referenceBlock>
     </body>
 </page>

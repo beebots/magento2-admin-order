@@ -1,10 +1,11 @@
 define([
     'jquery',
     'Magento_Ui/js/modal/alert',
+    'order-item-reload-helper',
     'selectize',
     'Magento_Catalog/catalog/product/composite/configure',
     'Magento_Sales/order/create/scripts',
-], function ($, alert) {
+], function ($, alert, itemsReloadHelper) {
     'use strict';
 
     let config = {
@@ -36,8 +37,9 @@ define([
             this.replaceDefaultOrderSaveButton();
             this.hideDefaultProductSearchButton();
 
-            this.setupReinitAfterItemsLoad();
-            this.setupReinitAfterAreasLoad();
+            itemsReloadHelper.onReload('itemAdderInit', function(){
+                this.init(this.productData);
+            }.bind(this));
 
             return this;
         },
@@ -144,34 +146,6 @@ define([
 
         hideDefaultProductSearchButton: function(){
             $(config.defaultSearchButtonSelector).hide();
-        },
-
-        setupReinitAfterItemsLoad: function(){
-            if(this.hasHookedIntoOrderItemsLoadEvent){
-                return;
-            }
-
-            let originalItemsLoaded = window.order.itemsLoaded;
-            window.order.itemsLoaded = function(){
-                originalItemsLoaded();
-                this.init(this.productData);
-            }.bind(this);
-
-            this.hasHookedIntoOrderItemsLoadEvent = true;
-        },
-
-        setupReinitAfterAreasLoad: function(){
-            if(this.hasHookedIntoOrderAreasLoadEvent){
-                return;
-            }
-
-            let originalAreasLoaded = window.order.areasLoaded;
-            window.order.areasLoaded = function(){
-                originalAreasLoaded();
-                this.init(this.productData);
-            }.bind(this);
-
-            this.hasHookedIntoOrderAreasLoadEvent = true;
         },
 
         onItemSelectorChange: function(event){
