@@ -3,13 +3,17 @@ namespace BeeBots\AdminOrder\Block\Adminhtml\Order\Create;
 
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
-use Magento\Catalog\Api\Data\ProductAttributeInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Eav\Model\Config as EavConfig;
 
-class ItemSearch extends Template
+/**
+ * Class ItemAdder
+ *
+ * @package BeeBots\AdminOrder\Block\Adminhtml\Order\Create
+ */
+class ItemAdder extends Template
 {
     /**
      * @var CollectionFactory
@@ -40,6 +44,11 @@ class ItemSearch extends Template
         $this->eavConfig = $eavConfig;
     }
 
+    /**
+     * Function: getSimpleProductJson
+     *
+     * @return false|string
+     */
     public function getSimpleProductJson()
     {
         $productCollection = $this->collectionFactory->create()
@@ -62,5 +71,4 @@ class ItemSearch extends Template
 
         return json_encode($items);
     }
-
 }

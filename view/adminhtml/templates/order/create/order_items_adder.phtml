@@ -1,9 +1,9 @@
 <?php
- /** @var $block BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch */
+ /** @var $block BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemAdder */
 ?>
 <script>
     require([
-        'order-items-add'
+        'order-items-adder'
     ], function(orderItemsAdd){
         orderItemsAdd.init(<?= $block->getSimpleProductJson()?>);
     });

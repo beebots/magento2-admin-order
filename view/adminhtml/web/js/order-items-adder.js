@@ -1,9 +1,10 @@
 define([
     'jquery',
+    'Magento_Ui/js/modal/alert',
     'selectize',
     'Magento_Catalog/catalog/product/composite/configure',
     'Magento_Sales/order/create/scripts',
-], function ($) {
+], function ($, alert) {
     'use strict';
 
     let config = {
@@ -20,7 +21,7 @@ define([
         defaultSearchButtonSelector: 'button#add_products'
     };
 
-    let orderItemsAdd = {
+    let orderItemsAdder = {
         itemsToAddToOrder: [],
         productData: [],
         hasHookedIntoOrderItemsLoadEvent: false,
@@ -152,7 +153,6 @@ define([
 
             let originalItemsLoaded = window.order.itemsLoaded;
             window.order.itemsLoaded = function(){
-                console.log('itemsHook');
                 originalItemsLoaded();
                 this.init(this.productData);
             }.bind(this);
@@ -167,7 +167,6 @@ define([
 
             let originalAreasLoaded = window.order.areasLoaded;
             window.order.areasLoaded = function(){
-                console.log('areasHook');
                 originalAreasLoaded();
                 this.init(this.productData);
             }.bind(this);
@@ -278,7 +277,9 @@ define([
         },
 
         onSaveNewItemsFail: function(xhr, status, error){
-            console.log('Error updating new order items: ' + error);
+            alert({
+                content: error
+            });
         },
 
         onSaveNewItemsComplete: function(){
@@ -334,5 +335,5 @@ define([
         }
     };
 
-    return orderItemsAdd;
+    return orderItemsAdder;
 });

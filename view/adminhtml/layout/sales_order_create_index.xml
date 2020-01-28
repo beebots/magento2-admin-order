@@ -10,12 +10,12 @@
         <css src="BeeBots_AdminOrder::css/lib/selectize.default.css"/>
     </head>
     <body>
-<!--        <referenceBlock name="search" remove="true" />-->
+        <referenceBlock name="search" remove="true" />
         <referenceBlock name="content">
             <block class="Magento\Framework\View\Element\Template" template="BeeBots_AdminOrder::order/create/admin_order_js.phtml" name="admin_order_js"/>
         </referenceBlock>
         <referenceBlock name="js">
-            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemSearch" template="BeeBots_AdminOrder::order/create/item_search.phtml" name="bb_item_search" as="search" before="-"/>
+            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemAdder" template="BeeBots_AdminOrder::order/create/order_items_adder.phtml" name="bb_item_adder" before="-"/>
         </referenceBlock>
     </body>
 </page>

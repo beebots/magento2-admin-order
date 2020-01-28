@@ -4,7 +4,7 @@ var config = {
             'microplugin': 'BeeBots_AdminOrder/js/lib/microplugin',
             'sifter': 'BeeBots_AdminOrder/js/lib/sifter.min',
             'selectize': 'BeeBots_AdminOrder/js/lib/selectize',
-            'order-items-add': 'BeeBots_AdminOrder/js/order-items-add'
+            'order-items-adder': 'BeeBots_AdminOrder/js/order-items-adder'
         }
     },
     deps: [
