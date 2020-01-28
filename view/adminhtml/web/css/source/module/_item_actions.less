@@ -5,16 +5,15 @@
 #order-items_grid {
 
     tr{
+        &.updated{
+            background: @updated-background-color;
+        }
+
         &.remove{
             background: @delete-background-color;
         }
-
         &.cart{
             background: @move-to-cart-background-color;
-        }
-
-        &.updated{
-            background: @updated-background-color;
         }
     }
 
@@ -26,14 +25,11 @@
 
             &.icon-cart {
                 &:extend(.abs-action-delete all);
+                margin-left: 0;
 
                 &:after {
                     content: @icon-cart__content;
                 }
-            }
-
-            &.undo {
-              &:extend(.abs-action-button-as-link all);
             }
         }
     }

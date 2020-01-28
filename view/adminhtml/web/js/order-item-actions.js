@@ -23,7 +23,6 @@ define([
                 this.init();
             }.bind(this));
 
-
             return this;
         },
 
@@ -38,19 +37,13 @@ define([
         setupActionsForDropdown: function (index, element) {
             let $dropdown = $(element);
 
-            let $undoButton = this.createUndoButton();
-            $undoButton.click(this.createEventData($dropdown, config.undoVal), this.onActionClick.bind(this));
-            //$undoButton.hide();
-            $dropdown.after($undoButton);
-
             let $cartButton = this.createCartButton();
             $cartButton.click(this.createEventData($dropdown, config.moveToCartVal), this.onActionClick.bind(this));
-            $dropdown.after($cartButton);
+            $dropdown.before($cartButton);
 
             let $deleteButton = this.createDeleteButton();
             $deleteButton.click(this.createEventData($dropdown, config.deleteVal), this.onActionClick.bind(this));
-            $dropdown.after($deleteButton);
-
+            $dropdown.before($deleteButton);
         },
 
         createDeleteButton: function(){
@@ -59,10 +52,6 @@ define([
 
         createCartButton: function(){
             return $('<button type="button" title="Move to cart" class="action icon icon-cart"><span>Move to cart</span></button>');
-        },
-
-        createUndoButton: function(){
-            return $('<button type="button" title="Undo" class="action undo"><span>Undo</span></button>');
         },
 
         createEventData: function($dropdown, dropdownValue) {
@@ -75,10 +64,17 @@ define([
         onActionClick: function(event){
             let $dropdown = event.data.dropdown;
             let $clickValue = event.data.dropdownValue;
+            let currentDropdownValue = $dropdown.val();
+            let $row = $dropdown.closest('tr');
+
+            // Undo
+            if(currentDropdownValue === $clickValue){
+                $dropdown.val(config.undoVal);
+                this.setRowClass($row, config.undoVal);
+                return this;
+            }
 
             $dropdown.val($clickValue);
-
-            let $row = $dropdown.closest('tr');
             this.setRowClass($row, event.data.dropdownValue);
 
             return this;
@@ -86,8 +82,7 @@ define([
 
         setRowClass: function($row, rowClass){
             $row.removeClass(config.deleteVal)
-                .removeClass(config.moveToCartVal)
-                .removeClass(config.updatedClass);
+                .removeClass(config.moveToCartVal);
 
             if(rowClass){
                 $row.addClass(rowClass);
