@@ -1,3 +1,12 @@
+<?php
+/** @var $block Magento\Backend\Block\Template */
+?>
 <script>
-    require(["BeeBots_AdminOrder/js/admin-order"]);
+    require([
+        'order-item-actions',
+        'order-coupon'
+    ], function(orderItemActions, orderCoupon){
+        orderItemActions.init();
+        orderCoupon.init();
+    });
 </script>
