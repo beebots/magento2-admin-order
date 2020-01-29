@@ -4,9 +4,11 @@
 <script>
     require([
         'order-item-actions',
-        'order-coupon'
-    ], function(orderItemActions, orderCoupon){
+        'order-coupon',
+        'order-item-price-percentage',
+    ], function(orderItemActions, orderCoupon, orderItemPricePercentage){
         orderItemActions.init();
         orderCoupon.init();
+        orderItemPricePercentage.init();
     });
 </script>
