@@ -47,11 +47,11 @@ define([
         },
 
         createDeleteButton: function(){
-            return $('<button type="button" title="Remove" class="action icon icon-remove"><span>Remove</span></button>');
+            return $('<button type="button" tabindex="-1" title="Remove" class="action icon icon-remove"><span>Remove</span></button>');
         },
 
         createCartButton: function(){
-            return $('<button type="button" title="Move to cart" class="action icon icon-cart"><span>Move to cart</span></button>');
+            return $('<button type="button" tabindex="-1" title="Move to cart" class="action icon icon-cart"><span>Move to cart</span></button>');
         },
 
         createEventData: function($dropdown, dropdownValue) {

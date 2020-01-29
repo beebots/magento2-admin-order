@@ -22,7 +22,7 @@ define([
         defaultSearchButtonSelector: 'button#add_products'
     };
 
-    let orderItemsAdder = {
+    let orderItemAdder = {
         itemsToAddToOrder: [],
         productData: [],
         hasHookedIntoOrderItemsLoadEvent: false,
@@ -309,5 +309,5 @@ define([
         }
     };
 
-    return orderItemsAdder;
+    return orderItemAdder;
 });
