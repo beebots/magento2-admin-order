@@ -1,8 +1,8 @@
 define([
     'jquery',
-    'order-item-reload-helper',
+    'order-reload-helper',
     'Magento_Sales/order/create/scripts',
-], function ($, itemsReloadHelper) {
+], function ($, orderReloadHelper) {
     'use strict';
 
     let config = {
@@ -19,7 +19,7 @@ define([
             this.initializeRowActionsForDropdowns()
                 .initializeRowUpdateEvents();
 
-            itemsReloadHelper.onReload('itemActionsInit', function(){
+            orderReloadHelper.onOrderItemGridReload('itemActionsInit', function(){
                 this.init();
             }.bind(this));
 

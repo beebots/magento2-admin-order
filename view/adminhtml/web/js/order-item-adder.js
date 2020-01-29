@@ -1,11 +1,11 @@
 define([
     'jquery',
     'Magento_Ui/js/modal/alert',
-    'order-item-reload-helper',
+    'order-reload-helper',
     'selectize',
     'Magento_Catalog/catalog/product/composite/configure',
     'Magento_Sales/order/create/scripts',
-], function ($, alert, itemsReloadHelper) {
+], function ($, alert, orderReloadHelper) {
     'use strict';
 
     let config = {
@@ -37,7 +37,7 @@ define([
             this.replaceDefaultOrderSaveButton();
             this.hideDefaultProductSearchButton();
 
-            itemsReloadHelper.onReload('itemAdderInit', function(){
+            orderReloadHelper.onOrderItemGridReload('itemAdderInit', function(){
                 this.init(this.productData);
             }.bind(this));
 
