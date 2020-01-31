@@ -1,0 +1,8 @@
+<?php
+/** @var \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid $block */
+/** @var Magento\Quote\Model\Quote\Item $_item */
+$_item = $block->getItem();
+?>
+<div class="price-excl-tax" data-original-price="<?=$_item->getProduct()->getPrice() ?>" data-current-price="<?= $_item->getCalculationPrice()?>">
+    <?= /* @noEscape */ $block->formatPrice($_item->getCalculationPrice()) ?>
+</div>
