@@ -98,10 +98,7 @@ define([
             // Move custom price input to directly after price display
             $priceElement.after($customPriceInput);
 
-            // Hide the customPriceInput if custom price is disabled
-            if(!showCustomPrice){
-                $customPriceInput.hide();
-            }
+            this.setCustomPriceInputVisibility($customPriceInput, showCustomPrice);
 
             return this;
         },
@@ -153,6 +150,16 @@ define([
             } else {
                 $percentageInput.hide();
                 $percentIndicator.hide();
+            }
+
+            return this;
+        },
+
+        setCustomPriceInputVisibility: function($customPriceInput, showCustomPrice){
+            if(showCustomPrice){
+                $customPriceInput.show();
+            } else {
+                $customPriceInput.hide();
             }
 
             return this;
