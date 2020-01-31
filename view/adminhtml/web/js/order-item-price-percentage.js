@@ -74,12 +74,12 @@ define([
             let $percentageInput = this.createPercentageInput(percentageInputName);
 
             this.setPriceVisibility($priceElement, showCustomPrice);
-            this.setupCustomPriceInput($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice);
+            this.setupCustomPriceInput($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice, showCustomPrice);
             this.setupPercentageInput($percentageInput, $priceElement, $customPriceInput, showCustomPrice, originalPrice, currentPrice);
             this.setDisplayPriceToOriginal($priceElement, originalPrice);
         },
 
-        setupCustomPriceInput: function($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice){
+        setupCustomPriceInput: function($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice, showCustomPrice){
             // Copy the current price into the custom price input as a starting point
             $customPriceInput.val(Number(currentPrice).toFixed(2));
 
@@ -91,10 +91,18 @@ define([
                 currentPrice: currentPrice,
             };
             $customPriceInput.on('input change', eventData, this.onCustomPriceChange.bind(this));
+
+            // Select all on focus
             $customPriceInput.focus(this.onFocusSelect.bind(this));
 
             // Move custom price input to directly after price display
             $priceElement.after($customPriceInput);
+
+            // Hide the customPriceInput if custom price is disabled
+            if(!showCustomPrice){
+                $customPriceInput.hide();
+            }
+
             return this;
         },
 
