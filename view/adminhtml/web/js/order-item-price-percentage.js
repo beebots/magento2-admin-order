@@ -12,10 +12,11 @@ define([
         priceDisplaySelector: '.price-excl-tax',
         customPriceCheckboxSelector: '.custom-price-block input[type=checkbox]',
         pricePercentageClass: 'js-price-percentage',
-        percentageIndicatorClass: 'js-percent-indicator'
+        percentageIndicatorClass: 'js-percent-indicator',
+        priceValueSelector: '.price',
     };
 
-    let orderItemPricePercentage = {
+    return {
         init: function () {
             this.redefineToggleCustomPrice();
 
@@ -32,16 +33,15 @@ define([
             let originalToggleCustomPrice = window.order.toggleCustomPrice;
             window.order.toggleCustomPrice = function(checkbox, elemId, tierBlock){
                 originalToggleCustomPrice(checkbox, elemId, tierBlock);
-                this.additionalToggleCustomPriceActions(checkbox, elemId, tierBlock);
+                this.additionalToggleCustomPriceActions(checkbox);
             }.bind(this);
 
             return this;
         },
 
-        additionalToggleCustomPriceActions: function(checkbox, elemId, tierBlock){
+        additionalToggleCustomPriceActions: function(checkbox){
             let $checkbox = $(checkbox);
             let $priceArea = $checkbox.closest(config.priceColSelector);
-            let $customPriceInput = $priceArea.find(config.customPriceInputSelector);
             let $percentageInput = $priceArea.find('.' + config.pricePercentageClass);
             let $percentageIndicator = $priceArea.find('.' + config.percentageIndicatorClass);
             let $priceElement = $priceArea.find(config.priceDisplaySelector);
@@ -76,6 +76,7 @@ define([
             this.setPriceVisibility($priceElement, showCustomPrice);
             this.setupCustomPriceInput($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice);
             this.setupPercentageInput($percentageInput, $priceElement, $customPriceInput, showCustomPrice, originalPrice, currentPrice);
+            this.setDisplayPriceToOriginal($priceElement, originalPrice);
         },
 
         setupCustomPriceInput: function($customPriceInput, $priceElement, $percentageInput, originalPrice, currentPrice){
@@ -89,7 +90,8 @@ define([
                 originalPrice: originalPrice,
                 currentPrice: currentPrice,
             };
-            $customPriceInput.change(eventData, this.onCustomPriceChange.bind(this));
+            $customPriceInput.on('input change', eventData, this.onCustomPriceChange.bind(this));
+            $customPriceInput.focus(this.onFocusSelect.bind(this));
 
             // Move custom price input to directly after price display
             $priceElement.after($customPriceInput);
@@ -114,7 +116,7 @@ define([
                 customPriceInput: $customPriceInput,
                 originalPrice: originalPrice,
             };
-            $percentageInput.keyup(eventData, this.onPercentageKeyUp.bind(this));
+            $percentageInput.on('change input', eventData, this.onPercentageChange.bind(this));
             $percentageInput.focus(this.onFocusSelect.bind(this));
             $percentageInput.val(percentageValue);
             $customPriceInput.after($percentageInput);
@@ -125,6 +127,15 @@ define([
             this.setPercentageInputVisibility($percentageInput, $percentIndicator, showCustomPrice);
 
             return this;
+        },
+
+        setDisplayPriceToOriginal: function($priceElement, originalPrice){
+            $priceElement.find(config.priceValueSelector)
+                .html(this.formatPriceForDisplay(originalPrice));
+        },
+
+        formatPriceForDisplay(price){
+            return '$' + Number(price).toFixed(2);
         },
 
         setPercentageInputVisibility: function($percentageInput, $percentIndicator, showCustomPrice){
@@ -140,7 +151,7 @@ define([
         },
 
         setCheckboxStateToMatchPriceState: function($checkbox, originalPrice, currentPrice){
-            if(originalPrice == currentPrice){
+            if(Number(originalPrice) === Number(currentPrice)){
                 $checkbox.prop('checked', false);
             } else {
                 $checkbox.prop('checked', true);
@@ -154,9 +165,11 @@ define([
         },
 
         calculatePercentage: function(fullPrice, currentPrice){
-            if(fullPrice == undefined || fullPrice === 0){
+            if(fullPrice === undefined
+                || fullPrice === 0){
                 return 0;
             }
+
             return (100 - (currentPrice / fullPrice * 100)).toFixed(0);
         },
 
@@ -165,7 +178,7 @@ define([
             return originalPrice * multiplier;
         },
 
-        onPercentageKeyUp: function(event){
+        onPercentageChange: function(event){
             let $percentageInput = event.data.percentageInput;
             let percentValue = Number($percentageInput.val());
             let $customPriceInput = event.data.customPriceInput;
@@ -218,7 +231,5 @@ define([
             event.target.select();
             return this;
         }
-    }
-
-    return orderItemPricePercentage;
+    };
 });
