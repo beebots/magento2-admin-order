@@ -19,7 +19,6 @@ define([
         rowActionsClass: 'js-order-item-row-actions',
         itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
         orderItemsGridSelector: '#order-items_grid',
-        defaultSearchButtonSelector: 'button#add_products'
     };
 
     let orderItemAdder = {
@@ -35,7 +34,6 @@ define([
             $itemAddTable.insertAfter(config.insertAfterSelector);
 
             this.replaceDefaultOrderSaveButton();
-            this.hideDefaultProductSearchButton();
 
             orderReloadHelper.onOrderItemGridReload('itemAdderInit', function(){
                 this.init(this.productData);
@@ -142,10 +140,6 @@ define([
             let $newSaveButton = this.createSaveButton();
             $(config.orderItemsGridSelector).after($newSaveButton);
             $originalOrderSaveButton.hide();
-        },
-
-        hideDefaultProductSearchButton: function(){
-            $(config.defaultSearchButtonSelector).hide();
         },
 
         onItemSelectorChange: function(event){
