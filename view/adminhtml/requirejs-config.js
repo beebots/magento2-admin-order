@@ -8,7 +8,8 @@ var config = {
             'order-item-actions': 'BeeBots_AdminOrder/js/order-item-actions',
             'order-reload-helper': 'BeeBots_AdminOrder/js/order-reload-helper',
             'order-coupon': 'BeeBots_AdminOrder/js/order-coupon',
-            'order-item-price-percentage': 'BeeBots_AdminOrder/js/order-item-price-percentage'
+            'order-item-price-percentage': 'BeeBots_AdminOrder/js/order-item-price-percentage',
+            'order-tabs-ui': "BeeBots_AdminOrder/js/order-tabs-ui"
         }
     },
     deps: [

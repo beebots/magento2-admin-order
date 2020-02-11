@@ -1,0 +1,82 @@
+@tab-control__padding-bottom-modified: 5px;
+@tab-control__padding-top-modified: 5px;
+@tab-control__border-width-modified: 1px;
+@tab-control__height-modified: 30px;
+
+.page-create-order {
+    .order-tabs {
+        .lib-clearfix();
+        .lib-css(margin, 0 @tab-control__margin-right 20px 0);
+        list-style: none;
+        position: relative;
+        z-index: 1;
+        .lib-css(border-bottom, @tab-content__border);
+        .lib-css(height, @tab-control__height-modified + @tab-control__border-width-modified);
+
+        li{
+            float: left;
+            width: auto;
+
+            > .switch {
+                display: block;
+                position: relative;
+                z-index: 2;
+                .lib-css(margin, 0 @tab-control__margin-right 0 0);
+
+                .lib-typography(
+                    @_color: @tab-control__color,
+                    @_font-size: @tab-control__font-size,
+                    @_font-family: @tab-control__font-family,
+                    @_font-weight: @tab-control__font-weight,
+                    @_font-style: @tab-control__font-style,
+                    @_line-height: @tab-control__line-height
+                );
+                .lib-link(
+                    @_link-color: @tab-control__active__color,
+                    @_link-text-decoration: @tab-control__text-decoration,
+                    @_link-color-visited: @tab-control__active__color,
+                    @_link-text-decoration-visited: @tab-control__visited__text-decoration,
+                    @_link-color-hover: @tab-control__active__color,
+                    @_link-text-decoration-hover: @tab-control__hover__text-decoration,
+                    @_link-color-active: @tab-control__active__color,
+                    @_link-text-decoration-active: @tab-control__active__text-decoration
+                );
+                .lib-css(background, @tab-control__background-color);
+                .lib-css(border, @tab-content__border);
+                border-bottom: none;
+                .lib-css(height, @tab-control__height-modified);
+                .lib-css(padding, @tab-control__padding-top-modified @tab-control__padding-right @tab-control__padding-bottom-modified @tab-control__padding-left);
+            }
+
+            &:not(.disabled) > .switch:focus,
+            &:not(.disabled) > .switch:hover {
+                .lib-css(background, @tab-control__hover__background-color);
+            }
+
+            &:not(.disabled) > .switch:active,
+            &.active > .switch,
+            &.active > .switch:focus,
+            &.active > .switch:hover {
+                .lib-css(background, @tab-control__active__background-color);
+                .lib-css(color, @tab-control__active__color);
+                .lib-css(text-decoration, @tab-control__active__text-decoration);
+            }
+
+            &.active > .switch,
+            &.active > .switch:focus,
+            &.active > .switch:hover {
+                .lib-css(padding-bottom, @tab-control__padding-bottom-modified + @tab-control__border-width-modified);
+                .lib-css(height, @tab-control__height-modified + @tab-control__border-width-modified);
+            }
+
+        }
+
+    }
+    .order-tabs-panel{
+        display: none;
+
+        &.active{
+            display: block;
+        }
+    }
+}
