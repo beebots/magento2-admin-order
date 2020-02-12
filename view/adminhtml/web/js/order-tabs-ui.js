@@ -6,14 +6,18 @@ define([
     'use strict';
 
     let config = {
+        formSelector: '#edit_form',
         contentAreaSelector: '.order-details',
         insertBeforeSelector: '#order-form_account',
         orderTabsClass: 'order-tabs',
         activeClass: 'active',
         inactiveClass: 'disabled',
         panelClass: 'order-tabs-panel',
+        tabIdDataAttribute: 'data-tab-id',
+        panelTabIdDataAttribute: 'data-panel-tab-id',
         tabsInfo: [
             {
+                tabId: 'tab_order_info',
                 title: 'Order Info',
                 panelSelectors: [
                     '#order-form_account',
@@ -21,12 +25,14 @@ define([
                 ],
             },
             {
+                tabId: 'tab_addresses',
                 title: 'Addresses',
                 panelSelectors: [
                     '#order-addresses'
                 ]
             },
             {
+                tabId: 'tab_shipping_payment',
                 title: 'Shipping & Payment',
                 panelSelectors: [
                     '#order-methods',
@@ -43,6 +49,7 @@ define([
             $.extend(config, options);
 
             this.createTabs();
+            this.setupFormInvalidHandler();
 
             orderReloadHelper.onReloadAreas('orderTabsUiInit', function () {
                 this.init();
@@ -67,16 +74,14 @@ define([
 
         createTab: function(tabInfo){
             let $tabListItem = $('<li></li>')
-                .data('tabInfo', tabInfo);
+                .attr(config.tabIdDataAttribute, tabInfo.tabId);
 
             let $tabListItemLink = $('<a class="switch">' + tabInfo.title + '</a>');
 
             $tabListItemLink.on('click', this.onTabClick.bind(this));
             $tabListItem.append($tabListItemLink);
 
-            tabInfo.panelSelectors.forEach(function(panelSelector){
-                $(panelSelector).addClass(config.panelClass);
-            });
+            this.setupPanelsForTab(tabInfo.panelSelectors, tabInfo.tabId);
 
             if(tabInfo.isActive){
                 this.activateTab($tabListItem);
@@ -87,8 +92,21 @@ define([
             return $tabListItem;
         },
 
+        setupPanelsForTab: function(panelSelectors, tabId){
+            panelSelectors.forEach(function(panelSelector){
+                let $panel = $(config.contentAreaSelector + ' ' + panelSelector);
+                $panel
+                    .addClass(config.panelClass)
+                    .attr(config.panelTabIdDataAttribute, tabId);
+
+            }.bind(this));
+
+            return this;
+        },
+
         activateTab: function($tabListItem){
-            let tabInfo = $tabListItem.data('tabInfo');
+            let tabId = $tabListItem.attr(config.tabIdDataAttribute);
+            let tabInfo = this.getTabInfoById(tabId);
             tabInfo.panelSelectors.forEach(function(panelSelector){
                 $(panelSelector)
                     .removeClass(config.inactiveClass)
@@ -103,7 +121,8 @@ define([
         },
 
         disableTab: function($tabListItem){
-            let tabInfo = $tabListItem.data('tabInfo');
+            let tabId = $tabListItem.attr(config.tabIdDataAttribute);
+            let tabInfo = this.getTabInfoById(tabId);
             tabInfo.panelSelectors.forEach(function(panelSelector){
                 $(panelSelector)
                     .removeClass(config.activeClass)
@@ -120,6 +139,12 @@ define([
         onTabClick: function(event){
             let $tabListItemLink = $(event.target);
             let $tabListItem = $tabListItemLink.closest('li');
+            this.selectTab($tabListItem);
+
+            event.preventDefault();
+        },
+
+        selectTab: function($tabListItem){
             let $tabList = $tabListItem.closest('ul');
             // Remove the active class on all tabs and panels
             $tabList.find('li').each(function(index, tabListItem){
@@ -129,8 +154,43 @@ define([
 
             // Add the active class to the chosen tab and panel
             this.activateTab($tabListItem);
+        },
 
-            event.preventDefault();
+        getTabInfoById: function(tabId){
+            let tabInfos = config.tabsInfo.filter(function(tabInfo){
+                return tabInfo.tabId === tabId;
+            });
+
+            if(tabInfos.length === 0){
+                return null;
+            }
+
+            return tabInfos[0];
+        },
+
+        setupFormInvalidHandler: function(){
+            let $orderCreateForm = $(config.formSelector);
+            $orderCreateForm.on('invalid-form.validate', this.onFormInvalid.bind(this));
+        },
+
+        onFormInvalid: function(event, validator){
+            if(!validator || !validator.errorList || !validator.errorList[0] || !validator.errorList[0].element){
+                return this;
+            }
+
+            let $invalidInput = $(validator.errorList[0].element);
+            let $containingPanel = $invalidInput.closest('.' + config.panelClass);
+
+            if($containingPanel.length === 0){
+                return this;
+            }
+
+            let tabId = $containingPanel.attr(config.panelTabIdDataAttribute);
+            let $tabListItem = $('.' + config.orderTabsClass + ' [' + config.tabIdDataAttribute + '="' + tabId + '"]');
+            this.selectTab($tabListItem);
+            $invalidInput.focus();
+
+            return this;
         },
     }
 });
