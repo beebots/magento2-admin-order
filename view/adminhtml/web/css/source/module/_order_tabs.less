@@ -82,5 +82,47 @@
         &.active{
             display: block;
         }
+
+         > .admin__page-section-title{
+            display: none;
+        }
+
+    }
+
+    .order-methods {
+        float: left;
+        #mix-grid .width(8,12);
+
+        .order-shipping-method{
+            float: left;
+        }
+
+        .order-billing-method{
+            float: right;
+        }
+
+        .admin__payment-method-wrapper{
+            float: none;
+            width: auto;
+        }
+    }
+
+    .order-summary{
+        float: right;
+        #mix-grid .width(4,12);
+
+        .admin__legend{
+            margin-bottom: 1.5rem;
+        }
+    }
+
+    .order-history,
+    .order-totals {
+        float: none;
+        width: auto;
+    }
+
+    .order-history{
+        display: none;
     }
 }

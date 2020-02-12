@@ -50,6 +50,7 @@ define([
 
             this.createTabs();
             this.setupFormInvalidHandler();
+            this.relocateOrderComments();
 
             orderReloadHelper.onReloadAreas('orderTabsUiInit', function () {
                 this.init();
@@ -190,6 +191,11 @@ define([
             this.selectTab($tabListItem);
             $invalidInput.focus();
 
+            return this;
+        },
+
+        relocateOrderComments: function(){
+            $('.order-totals-actions').prepend($('.order-history .field-comment'));
             return this;
         },
     }
