@@ -46,6 +46,7 @@
                 border-bottom: none;
                 .lib-css(height, @tab-control__height-modified);
                 .lib-css(padding, @tab-control__padding-top-modified @tab-control__padding-right @tab-control__padding-bottom-modified @tab-control__padding-left);
+                cursor: pointer;
             }
 
             &:not(.disabled) > .switch:focus,
@@ -60,20 +61,23 @@
                 .lib-css(background, @tab-control__active__background-color);
                 .lib-css(color, @tab-control__active__color);
                 .lib-css(text-decoration, @tab-control__active__text-decoration);
+                cursor: default;
             }
 
             &.active > .switch,
             &.active > .switch:focus,
             &.active > .switch:hover {
                 .lib-css(padding-bottom, @tab-control__padding-bottom-modified + @tab-control__border-width-modified);
-                .lib-css(height, @tab-control__height-modified + @tab-control__border-width-modified);
+                .lib-css(height, @tab-control__height-modified + @tab-control__border-width-modified);;
             }
 
         }
 
     }
     .order-tabs-panel{
-        display: none;
+        &.disabled{
+            display: none;
+        }
 
         &.active{
             display: block;

@@ -14,24 +14,24 @@ define([
         panelClass: 'order-tabs-panel',
         tabsInfo: [
             {
-                title: 'Account Info',
-                panelSelector: '#order-form_account',
-            },
-            {
                 title: 'Order Info',
-                panelSelector: '#amasty-order-attributes'
+                panelSelectors: [
+                    '#order-form_account',
+                    '#amasty-order-attributes'
+                ],
             },
             {
                 title: 'Addresses',
-                panelSelector: '#order-addresses'
+                panelSelectors: [
+                    '#order-addresses'
+                ]
             },
             {
                 title: 'Shipping & Payment',
-                panelSelector: '#order-methods'
-            },
-            {
-                title: 'Order Total',
-                panelSelector: '.order-summary',
+                panelSelectors: [
+                    '#order-methods',
+                    '.order-summary'
+                ],
                 isActive: true
             },
         ],
@@ -66,20 +66,17 @@ define([
         },
 
         createTab: function(tabInfo){
-            let $tabListItem = $('<li></li>');
-            let $tabListItemLink = $('<a href="' + tabInfo.panelSelector + '" class="switch">' + tabInfo.title + '</a>');
-            let $panel = $(config.contentAreaSelector + ' ' + tabInfo.panelSelector);
+            let $tabListItem = $('<li></li>')
+                .data('tabInfo', tabInfo);
 
-            //only create the tab if the associated panel exists
-            if(!$panel.length){
-                return null;
-            }
+            let $tabListItemLink = $('<a class="switch">' + tabInfo.title + '</a>');
 
             $tabListItemLink.on('click', this.onTabClick.bind(this));
             $tabListItem.append($tabListItemLink);
 
-
-            $panel.addClass(config.panelClass);
+            tabInfo.panelSelectors.forEach(function(panelSelector){
+                $(panelSelector).addClass(config.panelClass);
+            });
 
             if(tabInfo.isActive){
                 this.activateTab($tabListItem);
@@ -91,12 +88,14 @@ define([
         },
 
         activateTab: function($tabListItem){
-            $tabListItem
-                .removeClass(config.inactiveClass)
-                .addClass(config.activeClass);
+            let tabInfo = $tabListItem.data('tabInfo');
+            tabInfo.panelSelectors.forEach(function(panelSelector){
+                $(panelSelector)
+                    .removeClass(config.inactiveClass)
+                    .addClass(config.activeClass);
+            });
 
-            let panelSelector = $tabListItem.find('a').attr('href');
-            $(panelSelector)
+            $tabListItem
                 .removeClass(config.inactiveClass)
                 .addClass(config.activeClass);
 
@@ -104,10 +103,12 @@ define([
         },
 
         disableTab: function($tabListItem){
-            let panelSelector = $tabListItem.find('a').attr('href');
-            $(panelSelector)
-                .removeClass(config.activeClass)
-                .addClass(config.inactiveClass);
+            let tabInfo = $tabListItem.data('tabInfo');
+            tabInfo.panelSelectors.forEach(function(panelSelector){
+                $(panelSelector)
+                    .removeClass(config.activeClass)
+                    .addClass(config.inactiveClass);
+            });
 
             $tabListItem
                 .removeClass(config.activeClass)
