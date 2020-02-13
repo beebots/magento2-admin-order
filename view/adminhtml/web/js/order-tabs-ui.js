@@ -17,19 +17,20 @@ define([
         panelTabIdDataAttribute: 'data-panel-tab-id',
         tabsInfo: [
             {
+                tabId: 'tab_customer',
+                title: 'Customer Info',
+                panelSelectors: [
+                    '#order-form_account',
+                    '#order-addresses'
+                ],
+                isActive: true
+            },
+            {
                 tabId: 'tab_order_info',
                 title: 'Order Info',
                 panelSelectors: [
-                    '#order-form_account',
                     '#amasty-order-attributes'
                 ],
-            },
-            {
-                tabId: 'tab_addresses',
-                title: 'Addresses',
-                panelSelectors: [
-                    '#order-addresses'
-                ]
             },
             {
                 tabId: 'tab_shipping_payment',
@@ -37,8 +38,7 @@ define([
                 panelSelectors: [
                     '#order-methods',
                     '.order-summary'
-                ],
-                isActive: true
+                ]
             },
         ],
     };
