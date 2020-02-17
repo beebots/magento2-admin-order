@@ -1,11 +1,12 @@
 define([
     'jquery',
     'Magento_Ui/js/modal/alert',
+    'Magento_Ui/js/modal/confirm',
     'order-reload-helper',
     'selectize',
     'Magento_Catalog/catalog/product/composite/configure',
     'Magento_Sales/order/create/scripts',
-], function ($, alert, orderReloadHelper) {
+], function ($, alert, confirm, orderReloadHelper) {
     'use strict';
 
     let config = {
@@ -19,6 +20,7 @@ define([
         rowActionsClass: 'js-order-item-row-actions',
         itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
         orderItemsGridSelector: '#order-items_grid',
+        mainFormSelector: '#edit_form',
     };
 
     let orderItemAdder = {
@@ -34,6 +36,7 @@ define([
             $itemAddTable.insertAfter(config.insertAfterSelector);
 
             this.replaceDefaultOrderSaveButton();
+            this.setupSubmitConfirm();
 
             orderReloadHelper.onOrderItemGridReload('itemAdderInit', function(){
                 this.init(this.productData);
@@ -300,7 +303,47 @@ define([
         stopLoader: function(){
             $(window.productConfigure.blockForm).trigger('processStop');
             return this;
-        }
+        },
+
+        setupSubmitConfirm: function(){
+            $(config.mainFormSelector)
+                .off('realOrder')
+                .on('realOrder', this.confirmUnAddedItems.bind(this));
+
+            return this;
+        },
+
+        confirmUnAddedItems: function(){
+            if(this.hasUnsavedNewItems()){
+                $(config.mainFormSelector).trigger('processStop');
+
+                confirm({
+                    content: 'You have unsaved new items. Would you like to submit the order anyway?',
+                    actions: {
+                        confirm: function() {
+                            $(config.mainFormSelector).trigger('processStart');
+                            window.order._realSubmit();
+                        }
+                    }
+                });
+                return this;
+            }
+
+            window.order._realSubmit();
+
+            return this;
+        },
+
+        hasUnsavedNewItems: function(){
+            let hasUnsavedNewItems = false;
+            let $itemDropdowns = $('.' + config.itemAreaClass + ' .' + config.rowClass + ' select.' + config.itemSelectorClass);
+            $itemDropdowns.each(function(index, element){
+                if($(element).val() !== ''){
+                    hasUnsavedNewItems = true;
+                }
+            });
+            return hasUnsavedNewItems;
+        },
     };
 
     return orderItemAdder;
