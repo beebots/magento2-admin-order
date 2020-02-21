@@ -1,6 +1,6 @@
 define([
     'underscore',
-    'Magento_Sales/order/create/scripts',
+    'Magento_Sales/order/create/form',
 ], function (_) {
     'use strict';
 
