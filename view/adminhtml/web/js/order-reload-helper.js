@@ -45,6 +45,21 @@ define([
             return this;
         },
 
+        initReloadCallback: function(areaId, callback) {
+            let previousCallbackName = $(areaId).callback;
+            let previousCallbackFunction = function () {
+            };
+            if (previousCallbackName) {
+                previousCallbackFunction = window.order[previousCallbackName];
+            }
+            let callbackName = 'beebots' + areaId + 'Callback';
+            $(areaId).callback = callbackName;
+            window.order[callbackName] = function () {
+                previousCallbackFunction();
+                callback();
+            }.bind(this);
+        }
+
     };
 
     return orderReloadHelper;

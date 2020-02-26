@@ -1,12 +1,9 @@
 <?xml version="1.0"?>
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <body>
         <referenceBlock name="search" remove="true" />
+        <referenceBlock name="items">
+            <block class="Magento\Backend\Block\Template" template="BeeBots_AdminOrder::order/create/admin_order_load_block_js.phtml" name="admin_order_load_block_js"/>
+        </referenceBlock>
     </body>
 </page>
