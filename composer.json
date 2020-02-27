@@ -3,7 +3,8 @@
     "description": "",
     "require": {
         "php": ">=7.1.0",
-        "magento/module-sales": "^102.0.0"
+        "magento/module-sales": "^102.0.0",
+        "beebots/adminorderhelper": ">=0.1.0"
     },
     "type": "magento2-module",
     "version": "0.1.0",
