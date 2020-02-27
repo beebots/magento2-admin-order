@@ -16,13 +16,11 @@ define([
         },
 
         _initBilling: function(){
-            console.log('orderSaveAddress initBillingAddress');
             this.onBillingAddressChange();
             $jQuery('#order-billing_address_customer_address_id').change(this.onBillingAddressChange.bind(this));
         },
 
         _initShipping: function(){
-            console.log('orderSaveAddress initShippingAddress');
             this.onShippingAddressChange();
             $jQuery('#order-shipping_address_customer_address_id').change(this.onShippingAddressChange.bind(this));
         },
