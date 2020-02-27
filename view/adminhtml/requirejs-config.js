@@ -9,7 +9,8 @@ var config = {
             'order-coupon': 'BeeBots_AdminOrder/js/order-coupon',
             'order-item-price-percentage': 'BeeBots_AdminOrder/js/order-item-price-percentage',
             'order-tabs-ui': "BeeBots_AdminOrder/js/order-tabs-ui",
-            'order-save-address': "BeeBots_AdminOrder/js/order-save-address"
+            'order-save-address-book': "BeeBots_AdminOrder/js/order-save-address-book",
+            'order-ship-address-validation': "BeeBots_AdminOrder/js/order-ship-address-validation"
         }
     },
     deps: [

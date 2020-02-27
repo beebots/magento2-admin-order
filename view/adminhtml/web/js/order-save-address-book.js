@@ -2,7 +2,7 @@ define([
     'jquery',
     'order-reload-helper',
     'Magento_Sales/order/create/form',
-], function ($jQuery, orderReloadHelper) {
+], function ($, orderReloadHelper) {
     'use strict';
 
     return {
@@ -17,12 +17,12 @@ define([
 
         _initBilling: function(){
             this.onBillingAddressChange();
-            $jQuery('#order-billing_address_customer_address_id').change(this.onBillingAddressChange.bind(this));
+            $('#order-billing_address_customer_address_id').change(this.onBillingAddressChange.bind(this));
         },
 
         _initShipping: function(){
             this.onShippingAddressChange();
-            $jQuery('#order-shipping_address_customer_address_id').change(this.onShippingAddressChange.bind(this));
+            $('#order-shipping_address_customer_address_id').change(this.onShippingAddressChange.bind(this));
         },
 
         _initShippingReload: function(){
@@ -30,20 +30,20 @@ define([
         },
 
         onBillingAddressChange(){
-            let billingAddress = $jQuery('#order-billing_address_customer_address_id').val();
+            let billingAddress = $('#order-billing_address_customer_address_id').val();
             if(billingAddress){
-                $jQuery('#order-billing_address_save_in_address_book').prop('checked', null);
+                $('#order-billing_address_save_in_address_book').prop('checked', null);
             } else {
-                $jQuery('#order-billing_address_save_in_address_book').prop('checked', 'checked');
+                $('#order-billing_address_save_in_address_book').prop('checked', 'checked');
             }
         },
 
         onShippingAddressChange(){
-            let shippingAddress = $jQuery('#order-shipping_address_customer_address_id').val();
+            let shippingAddress = $('#order-shipping_address_customer_address_id').val();
             if(shippingAddress){
-                $jQuery('#order-shipping_address_save_in_address_book').prop('checked', null);
+                $('#order-shipping_address_save_in_address_book').prop('checked', null);
             } else {
-                $jQuery('#order-shipping_address_save_in_address_book').prop('checked', 'checked');
+                $('#order-shipping_address_save_in_address_book').prop('checked', 'checked');
             }
         }
     }

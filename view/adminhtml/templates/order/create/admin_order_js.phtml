@@ -7,13 +7,22 @@
         'order-coupon',
         'order-item-price-percentage',
         'order-tabs-ui',
-        'order-save-address'
-    ], function(orderItemActions, orderCoupon, orderItemPricePercentage, orderTabsUi, orderSaveAddress){
+        'order-save-address-book',
+        'order-ship-address-validation',
+    ], function(
+        orderItemActions,
+        orderCoupon,
+        orderItemPricePercentage,
+        orderTabsUi,
+        orderSaveAddress,
+        orderShipAddressValidation
+    ){
         orderItemActions.init();
         orderCoupon.init();
         orderItemPricePercentage.init();
         orderItemPricePercentage.init();
         orderTabsUi.init();
         orderSaveAddress.init();
+        orderShipAddressValidation.init();
     });
 </script>
