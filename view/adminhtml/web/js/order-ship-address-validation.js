@@ -3,7 +3,7 @@ define([
     'Magento_Sales/order/create/form',
 ], function ($) {
 
-    let shippingFieldsSelector = '#order-shipping_address input, #order-shipping_address select';
+    let shippingFieldsSelector = '#order-shipping_address input:not([type="checkbox"]), #order-shipping_address select';
 
     return {
 
@@ -12,8 +12,6 @@ define([
             window.order.loadShippingRates = function () {
                 if (this.validateShippingForm()) {
                     return origLoadShippingRates();
-                } else {
-
                 }
                 return false;
             }.bind(this);
