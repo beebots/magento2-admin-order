@@ -15,5 +15,8 @@
             <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\ItemAdder" template="BeeBots_AdminOrder::order/create/order_item_adder.phtml" name="bb_item_adder" />
             <block class="Magento\Backend\Block\Template" template="BeeBots_AdminOrder::order/create/admin_order_js.phtml" name="admin_order_js"/>
         </referenceBlock>
+        <referenceBlock name="page.title">
+            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\LinkCustomer" template="BeeBots_AdminOrder::order/create/link_customer.phtml" name="bee_link_customer"/>
+        </referenceBlock>
     </body>
 </page>

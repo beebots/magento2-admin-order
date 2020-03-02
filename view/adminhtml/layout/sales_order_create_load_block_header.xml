@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="BeeBots\AdminOrder\Block\Adminhtml\Order\Create\LinkCustomer" template="BeeBots_AdminOrder::order/create/link_customer.phtml" name="header">
+                <action method="setShowHeader">
+                    <argument name="showHeader" xsi:type="boolean">true</argument>
+                </action>
+                <block class="Magento\Sales\Block\Adminhtml\Order\Create\Header" name="orig_header"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

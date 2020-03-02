@@ -1,0 +1,11 @@
+<?php
+/** @var BeeBots\AdminOrder\Block\Adminhtml\Order\Create\LinkCustomer $blockHtml */
+?>
+<?php if ($block->getShowHeader()):?>
+    <?= $block->getChildHtml('orig_header')?>
+<?php endif; ?>
+<?php if ($block->hasCustomerId()): ?>
+    <div class="go-to-customer">
+        <a href="<?= $block->getCustomerUrl() ?>">Go To Customer</a>
+    </div>
+<?php endif; ?>
