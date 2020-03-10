@@ -195,7 +195,7 @@ define([
         },
 
         relocateOrderComments: function(){
-            $('.order-totals-actions').prepend($('.order-history .field-comment'));
+            $('#amasty-order-attributes').append($('.order-history'));
             return this;
         },
     }
