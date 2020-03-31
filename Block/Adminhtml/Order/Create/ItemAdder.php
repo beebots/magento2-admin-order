@@ -3,6 +3,7 @@ namespace BeeBots\AdminOrder\Block\Adminhtml\Order\Create;
 
 use Magento\Backend\Block\Template;
 use Magento\Backend\Block\Template\Context;
+use Magento\Backend\Model\Session\Quote;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
@@ -27,22 +28,30 @@ class ItemAdder extends Template
     private $eavConfig;
 
     /**
+     * @var Quote
+     */
+    private $sessionQuote;
+
+    /**
      * ItemSearch constructor.
      *
      * @param Context $context
      * @param CollectionFactory $collectionFactory
      * @param EavConfig $eavConfig
+     * @param Quote $sessionQuote
      * @param array $data
      */
     public function __construct(
         Context $context,
         CollectionFactory $collectionFactory,
         EavConfig $eavConfig,
+        Quote $sessionQuote,
         array $data = []
     ) {
         parent::__construct($context, $data);
         $this->collectionFactory = $collectionFactory;
         $this->eavConfig = $eavConfig;
+        $this->sessionQuote = $sessionQuote;
     }
 
     /**
@@ -60,11 +69,15 @@ class ItemAdder extends Template
         $items = [];
         /** @var ProductInterface $product */
         foreach ($productCollection as $product) {
+            // Set the customer group on the product so tiered pricing works properly
+            $product->setCustomerGroupId($this->sessionQuote->getQuote()->getCustomerGroupId());
+
+            $tierPrice = $product->getPriceModel()->getTierPrice(1, $product);
             $item = [
                 'id' => $product->getId(),
                 'sku' => $product->getSku(),
                 'name' => $product->getName(),
-                'price' => $product->getPrice(),
+                'price' => $tierPrice,
             ];
 
             $items[] = $item;
@@ -92,9 +105,11 @@ class ItemAdder extends Template
      */
     public function getCacheKeyInfo()
     {
-        $key = [];
-        $key[] = $this->getNameInLayout();
-        $key[] = $this->_storeManager->getStore()->getCode();
-        return $key;
+        return [
+            $this->getNameInLayout(),
+            $this->_storeManager->getStore()->getCode(),
+            $this->_storeManager->getStore()->getCode(),
+            $this->sessionQuote->getQuote()->getCustomerGroupId(),
+        ];
     }
 }
