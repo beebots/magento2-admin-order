@@ -21,6 +21,7 @@ define([
         itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
         orderItemsGridSelector: '#order-items_grid',
         mainFormSelector: '#edit_form',
+        customerGroupSelector: 'select#group_id',
     };
 
     let orderItemAdder = {
@@ -155,20 +156,23 @@ define([
 
         setRowPrice: function($row, productId){
             let $priceElement = $row.find('.' + config.priceClass);
+            let customerGroupId = $(config.customerGroupSelector).val();
             if(!productId){
                 $priceElement.empty();
                 return;
             }
-            let price = this.getPriceById(productId);
+            let price = this.getPriceById(productId, customerGroupId);
             let formattedPrice = this.formatPriceForDisplay(price);
             $priceElement.text(formattedPrice);
         },
 
-        getPriceById: function(productId){
+        getPriceById: function(productId, customerGroupId){
             let product =  this.productData.find(function(item){
                 return item.id === productId;
             });
-            return product['price'];
+
+            return product['tierPrices'][customerGroupId]
+                || product['retailPrice'];
         },
 
         formatPriceForDisplay: function(price){

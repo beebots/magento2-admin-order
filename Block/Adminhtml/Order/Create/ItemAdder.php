@@ -69,15 +69,12 @@ class ItemAdder extends Template
         $items = [];
         /** @var ProductInterface $product */
         foreach ($productCollection as $product) {
-            // Set the customer group on the product so tiered pricing works properly
-            $product->setCustomerGroupId($this->sessionQuote->getQuote()->getCustomerGroupId());
-
-            $tierPrice = $product->getPriceModel()->getTierPrice(1, $product);
             $item = [
                 'id' => $product->getId(),
                 'sku' => $product->getSku(),
                 'name' => $product->getName(),
-                'price' => $tierPrice,
+                'retailPrice' => $product->getPrice(),
+                'tierPrices' => $this->prepareCustomerGroupPrices($product),
             ];
 
             $items[] = $item;
@@ -109,7 +106,20 @@ class ItemAdder extends Template
             $this->getNameInLayout(),
             $this->_storeManager->getStore()->getCode(),
             $this->_storeManager->getStore()->getCode(),
-            $this->sessionQuote->getQuote()->getCustomerGroupId(),
         ];
+    }
+
+    private function prepareCustomerGroupPrices($product)
+    {
+        $tierPrices = $product->getTierPrices();
+        $customerGroupPrices = [];
+        foreach ($tierPrices as $tierPrice) {
+            // Limit to the first tier (quantity 1)
+            if ((int)$tierPrice->getQty() !== 1) {
+                continue;
+            }
+            $customerGroupPrices[$tierPrice->getCustomerGroupId()] = $tierPrice->getValue();
+        }
+        return $customerGroupPrices;
     }
 }
