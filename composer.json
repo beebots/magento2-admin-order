@@ -1,16 +1,14 @@
 {
     "name": "beebots/magento2-admin-order",
-    "description": "",
+    "description": "This module modifies Magento's default admin order screen to improve usability.",
     "require": {
         "php": ">=7.1.0",
         "magento/module-sales": "^102.0.0",
         "beebots/adminorderhelper": ">=0.1.0"
     },
     "type": "magento2-module",
-    "version": "0.1.0",
-    "license": [
-
-    ],
+    "version": "1.0.0",
+    "license": "MIT",
     "support": {
         "docs": "https://github.com/beebots/magento2-admin-order",
         "issues": "https://github.com/beebots/magento2-admin-order/issues",
