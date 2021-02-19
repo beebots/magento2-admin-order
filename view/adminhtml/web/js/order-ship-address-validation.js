@@ -1,7 +1,8 @@
 define([
     'jquery',
+    'order-tabs-ui',
     'Magento_Sales/order/create/form',
-], function ($) {
+], function ($, orderTabsUi) {
 
     let shippingFieldsSelector = '#order-shipping_address input:not([type="checkbox"]), #order-shipping_address select';
 
@@ -30,10 +31,15 @@ define([
                 valid &= result;
             });
             if(!valid){
+                this.selectAddressTab();
                 $validator.element(firstInvalid);
                 $form.triggerHandler('invalid-form', $validator);
             }
             return valid;
+        },
+
+        selectAddressTab: function() {
+            orderTabsUi.selectTab($('li[data-tab-id="tab_customer"]'));
         },
     };
 });
