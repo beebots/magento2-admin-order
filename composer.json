@@ -2,7 +2,7 @@
     "name": "beebots/magento2-admin-order",
     "description": "This module modifies Magento's default admin order screen to improve usability.",
     "require": {
-        "php": "^7.1",
+        "php": "^7.1 || ^8.1",
         "magento/module-sales": "^102.0.0",
         "beebots/magento2-admin-order-helper": "^1.0.0"
     },
