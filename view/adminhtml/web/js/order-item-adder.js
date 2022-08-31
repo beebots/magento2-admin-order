@@ -18,7 +18,7 @@ define([
         quantityClass: 'js-order-item-quantity',
         priceClass: 'js-order-item-price',
         rowActionsClass: 'js-order-item-row-actions',
-        itemsSaveButtonSelector: '#order-items button[onclick="order.itemsUpdate()"]',
+        itemsSaveButtonSelector: '#order-items button:first-child',
         orderItemsGridSelector: '#order-items_grid',
         mainFormSelector: '#edit_form',
         customerGroupSelector: 'select#group_id',
